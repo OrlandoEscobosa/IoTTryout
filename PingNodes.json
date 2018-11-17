@@ -1,0 +1,454 @@
+[{
+  "id": "39ecfddf.88993a",
+  "type": "tab",
+  "label": "Pings",
+  "disabled": false,
+  "info": ""
+}, {
+  "id": "6f947d7e.ad0b5c",
+  "type": "inject",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "topic": "",
+  "payload": "",
+  "payloadType": "date",
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "x": 260,
+  "y": 220,
+  "wires": [
+    ["de3ad032.fe70f8"]
+  ]
+}, {
+  "id": "97de2297.fa9a18",
+  "type": "mqtt out",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "topic": "ping/pi",
+  "qos": "0",
+  "retain": "",
+  "broker": "6dd98939.0d1948",
+  "x": 670,
+  "y": 140,
+  "wires": []
+}, {
+  "id": "de3ad032.fe70f8",
+  "type": "function",
+  "z": "39ecfddf.88993a",
+  "name": "WorkingTheData",
+  "func": "pingMsg = {}\n// message for google\nif(msg.topic == \"www.google.com\") {\n    pingMsg.payload = [{\n        ping: msg.payload\n    },{\n        server: \"google.com\",\n        protocol: \"http\",\n        interval: \"10s\"\n    }]\n    \n    return [null, pingMsg, null]\n} //Message local pi\nelse if (msg.topic == \"192.168.0.214\") \n{\n    pingMsg.payload = [{\n        ping: msg.payload\n    },{\n        server: \"localPi\",\n        protocol: \"http\",\n        interval: \"1s\"\n    }]\n    \n    return [pingMsg, null, null]\n} //Message Router\nelse if (msg.topic == \"192.168.0.1\") {\n    pingMsg.payload = [{\n        ping: msg.payload\n    },{\n        server: \"UPCRouter\",\n        protocol: \"http\",\n        interval: \"1s\"\n    }]\n    \n    return [pingMsg, null, null]\n}\nreturn msg;",
+  "outputs": 3,
+  "noerr": 0,
+  "x": 470,
+  "y": 180,
+  "wires": [
+    ["97de2297.fa9a18", "f21942e6.18fd2", "6361318b.c5ec68"],
+    ["47b2baa1.297374", "f1b03ff1.d3e268", "6361318b.c5ec68"],
+    []
+  ]
+}, {
+  "id": "8d4dbebd.c5a31",
+  "type": "ping",
+  "z": "39ecfddf.88993a",
+  "name": "PingGoogle",
+  "host": "www.google.com",
+  "timer": "10",
+  "x": 270,
+  "y": 140,
+  "wires": [
+    ["de3ad032.fe70f8"]
+  ]
+}, {
+  "id": "71d3473e.391c28",
+  "type": "ping",
+  "z": "39ecfddf.88993a",
+  "name": "PingPi",
+  "host": "192.168.0.214",
+  "timer": "1",
+  "x": 250,
+  "y": 180,
+  "wires": [
+    ["de3ad032.fe70f8"]
+  ]
+}, {
+  "id": "f21942e6.18fd2",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "DebugPi",
+  "active": true,
+  "tosidebar": true,
+  "console": true,
+  "tostatus": false,
+  "complete": "true",
+  "x": 650,
+  "y": 80,
+  "wires": []
+}, {
+  "id": "d2c3622f.afe788",
+  "type": "inject",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "topic": "",
+  "payload": "",
+  "payloadType": "date",
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "x": 260,
+  "y": 640,
+  "wires": [
+    ["7a3e0ea6.721d7"]
+  ]
+}, {
+  "id": "7a3e0ea6.721d7",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": false,
+  "complete": "false",
+  "x": 500,
+  "y": 640,
+  "wires": []
+}, {
+  "id": "13e0c75c.088db9",
+  "type": "inject",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "topic": "",
+  "payload": "",
+  "payloadType": "date",
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "x": 260,
+  "y": 700,
+  "wires": [
+    ["7abe785f.9230b8"]
+  ]
+}, {
+  "id": "7abe785f.9230b8",
+  "type": "function",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "func": "\nreturn msg;",
+  "outputs": 1,
+  "noerr": 0,
+  "x": 390,
+  "y": 700,
+  "wires": [
+    ["8f891654.d97648"]
+  ]
+}, {
+  "id": "8f891654.d97648",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": false,
+  "complete": "false",
+  "x": 550,
+  "y": 700,
+  "wires": []
+}, {
+  "id": "a220366.f7ef4c8",
+  "type": "function",
+  "z": "39ecfddf.88993a",
+  "name": "Uppercase",
+  "func": "var payload = msg.payload; //get the payload\nmsg.payload = payload.toUpperCase(); //convert to uppercase\nvar topic = msg.topic\nmsg.topic = topic.toUpperCase();\nreturn msg;",
+  "outputs": 1,
+  "noerr": 0,
+  "x": 410,
+  "y": 760,
+  "wires": [
+    ["6246910a.3664b"]
+  ]
+}, {
+  "id": "9af2bb96.44fc8",
+  "type": "inject",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "topic": "testtopic",
+  "payload": "test string",
+  "payloadType": "str",
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "x": 230,
+  "y": 760,
+  "wires": [
+    ["a220366.f7ef4c8"]
+  ]
+}, {
+  "id": "6246910a.3664b",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": false,
+  "complete": "false",
+  "x": 570,
+  "y": 760,
+  "wires": []
+}, {
+  "id": "8d88d4c5.a8309",
+  "type": "function",
+  "z": "39ecfddf.88993a",
+  "name": "Uppercase ",
+  "func": "var payload = msg.payload; //get the payload\nmsg.payload = payload.toUpperCase(); //convert to uppercase\nvar topic = msg.topic\nmsg.topic = topic.toUpperCase();\nreturn msg; \n\nif( msg.topic == \"test1\" ) {\n    return [msg, null];\n} else if (msg.topic == \"test2\" ) {\n    return [null, msg];\n}",
+  "outputs": 2,
+  "noerr": 0,
+  "x": 430,
+  "y": 980,
+  "wires": [
+    ["cd3db44a.c712c8"],
+    ["7dc12914.23f968"]
+  ]
+}, {
+  "id": "78644acc.5411c4",
+  "type": "inject",
+  "z": "39ecfddf.88993a",
+  "name": "test 1",
+  "topic": "test1",
+  "payload": "test message 1",
+  "payloadType": "str",
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "x": 270,
+  "y": 940,
+  "wires": [
+    ["8d88d4c5.a8309"]
+  ]
+}, {
+  "id": "cd3db44a.c712c8",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": false,
+  "complete": "false",
+  "x": 550,
+  "y": 940,
+  "wires": []
+}, {
+  "id": "778f8ac1.f98fe4",
+  "type": "inject",
+  "z": "39ecfddf.88993a",
+  "name": "test 2",
+  "topic": "test2",
+  "payload": "testmessage 2",
+  "payloadType": "str",
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "x": 270,
+  "y": 1020,
+  "wires": [
+    ["8d88d4c5.a8309"]
+  ]
+}, {
+  "id": "7dc12914.23f968",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": false,
+  "complete": "false",
+  "x": 550,
+  "y": 1020,
+  "wires": []
+}, {
+  "id": "47b2baa1.297374",
+  "type": "mqtt out",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "topic": "ping/google",
+  "qos": "0",
+  "retain": "",
+  "broker": "6dd98939.0d1948",
+  "x": 690,
+  "y": 220,
+  "wires": []
+}, {
+  "id": "f1b03ff1.d3e268",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "DebugGoogle",
+  "active": true,
+  "tosidebar": true,
+  "console": true,
+  "tostatus": false,
+  "complete": "true",
+  "x": 690,
+  "y": 280,
+  "wires": []
+}, {
+  "id": "b2e5a508.1d7e48",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": false,
+  "complete": "false",
+  "x": 630,
+  "y": 1080,
+  "wires": []
+}, {
+  "id": "cd383fbd.64506",
+  "type": "function",
+  "z": "39ecfddf.88993a",
+  "name": "MultipleMessages",
+  "func": "var message_out = []; //Arrray for messages\nvar message = msg.payload;\nfor(i = 0; i < 3; i++) {\n    message = message + i\n    var newmsg = {payload:message, topic:msg.topic}\n    message_out.push( newmsg );\n}\nreturn[message_out];",
+  "outputs": 1,
+  "noerr": 0,
+  "x": 430,
+  "y": 1080,
+  "wires": [
+    ["b2e5a508.1d7e48"]
+  ]
+}, {
+  "id": "a14f0b21.7d45f",
+  "type": "inject",
+  "z": "39ecfddf.88993a",
+  "name": "testMultipleMessages",
+  "topic": "testtopic",
+  "payload": "test",
+  "payloadType": "str",
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "x": 200,
+  "y": 1080,
+  "wires": [
+    ["cd383fbd.64506"]
+  ]
+}, {
+  "id": "53cc0dd7.06809c",
+  "type": "inject",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "topic": "",
+  "payload": "",
+  "payloadType": "date",
+  "repeat": "",
+  "crontab": "",
+  "once": false,
+  "x": 840,
+  "y": 680,
+  "wires": [
+    ["3b6e0ea8.fad16a"]
+  ]
+}, {
+  "id": "3b6e0ea8.fad16a",
+  "type": "function",
+  "z": "39ecfddf.88993a",
+  "name": "Fields and Tags",
+  "func": "msg.payload = [{\n    numValue: 12,\n    randomValue: Math.random()*10,\n    strValue: \"message2\"\n},\n{\n    tag1:\"sensor1\",\n    tag2:\"device2\"\n}];\nreturn msg;",
+  "outputs": 1,
+  "noerr": 0,
+  "x": 1011,
+  "y": 680,
+  "wires": [
+    ["d44379d9.48ca3", "ed78d3ac.72e618"]
+  ]
+}, {
+  "id": "d44379d9.48ca3",
+  "type": "influxdb out",
+  "z": "39ecfddf.88993a",
+  "influxdb": "eb321ca.83d17e",
+  "name": "",
+  "measurement": "test",
+  "precision": "",
+  "retentionPolicy": "",
+  "x": 1220,
+  "y": 720,
+  "wires": []
+}, {
+  "id": "ed78d3ac.72e618",
+  "type": "debug",
+  "z": "39ecfddf.88993a",
+  "name": "",
+  "active": true,
+  "console": "false",
+  "complete": "false",
+  "x": 1210,
+  "y": 640,
+  "wires": []
+}, {
+  "id": "6361318b.c5ec68",
+  "type": "influxdb out",
+  "z": "39ecfddf.88993a",
+  "influxdb": "eb321ca.83d17e",
+  "name": "",
+  "measurement": "ping",
+  "precision": "",
+  "retentionPolicy": "",
+  "x": 900,
+  "y": 180,
+  "wires": []
+}, {
+  "id": "7e43e60c.881288",
+  "type": "ping",
+  "z": "39ecfddf.88993a",
+  "name": "PingRouter",
+  "host": "192.168.0.1",
+  "timer": "1",
+  "x": 270,
+  "y": 100,
+  "wires": [
+    ["de3ad032.fe70f8"]
+  ]
+}, {
+  "id": "6dd98939.0d1948",
+  "type": "mqtt-broker",
+  "z": "",
+  "name": "raspberryMosquitto",
+  "broker": "192.168.0.214",
+  "port": "1883",
+  "clientid": "",
+  "usetls": false,
+  "compatmode": true,
+  "keepalive": "60",
+  "cleansession": true,
+  "birthTopic": "",
+  "birthQos": "0",
+  "birthPayload": "",
+  "closeTopic": "",
+  "closeQos": "0",
+  "closePayload": "",
+  "willTopic": "",
+  "willQos": "0",
+  "willPayload": ""
+}, {
+  "id": "eb321ca.83d17e",
+  "type": "influxdb",
+  "z": "",
+  "hostname": "127.0.0.1",
+  "port": "8086",
+  "protocol": "http",
+  "database": "pingDB",
+  "name": "InfluxDBPi",
+  "usetls": false,
+  "tls": ""
+}]
